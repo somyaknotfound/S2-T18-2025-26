@@ -11,11 +11,11 @@
 
   > Team ID: T18
 
-  > Member-1: Shanthi Alluri, 241CS206, shanthi.alluri@example.com
+  > Member-1: Shanthi Alluri, 241CS206, alurishanthi.241cs206@nitk.edu.in
 
-  > Member-2: Deekshitha Gowda, 241CS224, deekshitha.gowda@example.com
+  > Member-2: Deekshitha Gowda, 241CS224, deekshithaum.241cs224@nitk.edu.in
 
-  > Member-3: Somyak Priyadarshi Mohanta, 241CS257, somyak.mohanta@example.com
+  > Member-3: Somyak Priyadarshi Mohanta, 241CS257, somyakpriyadarshimohanta@nitk.edu.in
 </details>
 
 <!-- Second Section -->
