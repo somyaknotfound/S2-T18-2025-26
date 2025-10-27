@@ -44,7 +44,7 @@
   <summary>Detail</summary>
   
   <h3>System Flowchart</h3>
-  <img src="Snapshots/Diagrams/flowchar.drawio.png" alt="System Flowchart">
+  <img src="S2-18-MessCreditManagement/Snapshots/Diagrams/flowchar.drawio.png" alt="System Flowchart">
   
   <h3>Component Architecture</h3>
   <p>The system integrates five principal components:</p>
@@ -180,17 +180,17 @@
 ## Logisim Circuit Diagram
 <details>
   <summary>Detail</summary>
-
+  S2-18-MessCreditManagement/Snapshots/Diagrams
   <h3>Main Module</h3>
-  <img src="Snapshots/Logisim/main_circuit.png" alt="Main Module Circuit">
+  <img src="S2-18-MessCreditManagement/Snapshots/Logisim/main_circuit.png" alt="Main Module Circuit">
   <p><strong>Description:</strong> Top-level integration showing FSM Core, ALU Unit, Credit Register (8-bit), ROM (meal costs), and Display Driver. Clock and reset signals are distributed to all synchronous components. Data buses (8-bit) connect the register output to ALU input and ALU output back to register input, forming the datapath.</p>
 
   <h3>FSM Core</h3>
-  <img src="Snapshots/Logisim/FSM_circuit.png" alt="FSM Core Circuit">
+  <img src="S2-18-MessCreditManagement/Snapshots/Logisim/FSM_circuit.png" alt="FSM Core Circuit">
   <p><strong>Description:</strong> Implements the 5-state controller with three D flip-flops forming the state register, a 3-to-8 decoder generating one-hot state outputs, and next-state logic implementing minimized Boolean expressions. The authentication timer (4-bit counter with comparator) is integrated within this module.</p>
 
   <h3>Next State Logic</h3>
-  <img src="Snapshots/Logisim/Next_state_logic.png" alt="Next State Logic">
+  <img src="S2-18-MessCreditManagement/Snapshots/Logisim/Next_state_logic.png" alt="Next State Logic">
   <p><strong>Description:</strong> Combinatorial circuit implementing the minimized Sum-of-Products expressions derived from Karnaugh map optimization:</p>
   <ul>
     <li>D₂ = Q₁ · Q₀ · TD</li>
@@ -199,11 +199,11 @@
   </ul>
 
   <h3>ALU Unit</h3>
-  <img src="Snapshots/Logisim/ALU_circuit.png" alt="ALU Circuit">
+  <img src="S2-18-MessCreditManagement/Snapshots/Logisim/ALU_circuit.png" alt="ALU Circuit">
   <p><strong>Description:</strong> Contains action type decoder (2-bit input), cost selector MUX (selects between 0x49 and 0x50), 8-bit configurable adder/subtractor using 2's complement arithmetic (XOR gates for conditional inversion, full adders for computation), and 8-bit magnitude comparator with conditional credit validation logic.</p>
 
   <h3>Display Driver</h3>
-  <img src="Snapshots/Logisim/Display_driver.png" alt="Display Driver Circuit">
+  <img src="S2-18-MessCreditManagement/Snapshots/Logisim/Display_driver.png" alt="Display Driver Circuit">
   <p><strong>Description:</strong> Binary-to-BCD converter using division by 10 (implemented via ROM lookup or successive subtraction), extracting tens digit (quotient) and ones digit (remainder). Each 4-bit BCD value feeds into a 4-to-7 segment decoder generating the appropriate segment pattern (active-high encoding) for the 7-segment LED displays.</p>
   
 </details>
