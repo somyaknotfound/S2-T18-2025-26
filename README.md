@@ -15,7 +15,7 @@
 
   > Member-2: Deekshitha Gowda, 241CS224, deekshithaum.241cs224@nitk.edu.in
 
-  > Member-3: Somyak Priyadarshi Mohanta, 241CS257, somyakpriyadarshimohanta@nitk.edu.in
+  > Member-3: Somyak Priyadarshi Mohanta, 241CS257, somyakpriyadarshimohanta.241cs257@nitk.edu.in
 </details>
 
 <!-- Second Section -->
