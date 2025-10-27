@@ -23,18 +23,25 @@
 <details>
   <summary>Detail</summary>
   
-  <p><strong>1. Motivation:</strong> Traditional university mess and canteen systems rely on manual or basic digital billing, leading to long queues, credit disputes, and operational inefficiencies. This project addresses these challenges by implementing an automated, intelligent credit management system using digital circuit design principles. By applying our knowledge of Finite State Machines (FSM), Arithmetic Logic Units (ALU), and sequential logic circuits, we create a real-world solution that enhances both student experience and administrative efficiency.</p>
+  <p><strong>1. Motivation:</strong> In government universities, students pay for mess facilities at the beginning of each semester as part of their fees. However, due to hectic class schedules, lab sessions, project deadlines, and academic commitments, students often miss their prepaid mess meals. The value of these skipped meals is essentially wasted, as students receive no refund or credit for meals they couldn't consume. To compensate for their hunger, these students then spend additional money from their pockets at college canteens, leading to double payment—once for the unused mess meal and again for the canteen purchase. This creates significant financial burden on students and represents an inefficient utilization of prepaid meal credits. Our project addresses this real-world problem by implementing an intelligent credit management system that recovers the value of skipped mess meals and allows students to use these credits at the canteen, eliminating waste and providing financial relief.</p>
 
-  <p><strong>2. Problem Statement:</strong> This project aims to design and implement a fully automated digital credit management system for university dining facilities using Logisim and Verilog HDL. The system must handle student authentication, flexible credit operations (deductions for meals and additions for refunds), real-time balance validation, and accurate transaction processing. The implementation utilizes only digital components—flip-flops, logic gates, multiplexers, comparators, and adders/subtractors—without relying on microcontrollers or software-based solutions.</p>
+  <p><strong>2. Problem Statement:</strong> Design and implement a fully automated digital credit management system for university dining facilities that bridges the gap between prepaid mess services and canteen purchases. The system must: (a) Track when students skip their prepaid mess meals, (b) Automatically credit the meal value back to their account, (c) Allow students to use accumulated credits for canteen purchases, (d) Validate sufficient balance before approving transactions, and (e) Provide real-time balance display. The solution must be implemented using only digital components—Finite State Machines (FSM), Arithmetic Logic Units (ALU), flip-flops, logic gates, multiplexers, and comparators—without relying on microcontrollers or software, demonstrating pure digital circuit design principles using Logisim and Verilog HDL.</p>
 
   <p><strong>3. Features:</strong></p>
   <ul>
-    <li><strong>(a) 5-State FSM Controller:</strong> Implements IDLE, AUTH, RECOMMEND, TRANSACTION, and UPDATE states with minimized next-state logic derived from Karnaugh maps.</li>
-    <li><strong>(b) Action-Type Based ALU:</strong> Supports three transaction modes using 2-bit encoding: Ate Mess (00), Skipped Mess (01), and Ate Canteen (10) with configurable add/subtract operations.</li>
-    <li><strong>(c) Real-Time Credit Validation:</strong> 8-bit comparator validates sufficient balance for deductions while bypassing checks for refund operations.</li>
-    <li><strong>(d) Timer-Based Authentication:</strong> Counter-comparator unit enforces configurable authentication delays to prevent unauthorized access.</li>
-    <li><strong>(e) BCD Display Driver:</strong> Converts 8-bit binary balance to dual-digit 7-segment display format for real-time visual feedback.</li>
-    <li><strong>(f) Synchronous Design:</strong> All modules operate on a central clock ensuring race-free, atomic transactions.</li>
+    <li><strong>(a) 5-State FSM Controller:</strong> Implements IDLE, AUTH, RECOMMEND, TRANSACTION, and UPDATE states with minimized next-state logic derived from Karnaugh maps for reliable transaction processing.</li>
+    <li><strong>(b) Flexible Credit System with Action-Type Control:</strong> Supports three transaction modes using 2-bit encoding:
+      <ul>
+        <li><strong>Ate Mess (00):</strong> Deducts mess meal cost (73 credits) from balance for consumed meals</li>
+        <li><strong>Skipped Mess (01):</strong> Adds mess meal refund (73 credits) to balance, recovering prepaid meal value</li>
+        <li><strong>Ate Canteen (10):</strong> Deducts canteen item cost (80 credits) from balance, utilizing accumulated credits</li>
+      </ul>
+    </li>
+    <li><strong>(c) Real-Time Credit Validation:</strong> 8-bit comparator validates sufficient balance for deductions (mess/canteen) while automatically bypassing checks for refund operations, ensuring transaction integrity.</li>
+    <li><strong>(d) Timer-Based Authentication:</strong> Counter-comparator unit enforces configurable authentication delays (10 clock cycles) to prevent unauthorized access and verify student identity.</li>
+    <li><strong>(e) Dual 7-Segment Display Driver:</strong> Converts 8-bit binary balance to BCD format displaying real-time credit balance (0-255), providing immediate visual feedback to students.</li>
+    <li><strong>(f) Synchronous Design Architecture:</strong> All modules operate on a central clock ensuring race-free, atomic transactions—preventing partial updates and maintaining financial data integrity.</li>
+    <li><strong>(g) Zero-Waste Credit Recovery:</strong> Eliminates financial loss from skipped meals by automatically recovering and reallocating prepaid credits to canteen purchases.</li>
   </ul>
 </details>
 
@@ -47,13 +54,19 @@
   <img src="S2-18-MessCreditManagement/Snapshots/Diagrams/flowchar.drawio.png" alt="System Flowchart">
   
   <h3>Component Architecture</h3>
-  <p>The system integrates five principal components:</p>
+  <p>The system integrates five principal components to solve the prepaid mess credit waste problem:</p>
   <ul>
-    <li><strong>FSM Core:</strong> Central controller managing state transitions (IDLE → AUTH → RECOMMEND → TRANSACTION → UPDATE) and generating control signals</li>
-    <li><strong>Credit Register:</strong> 8-bit register storing current student balance with synchronous load capability</li>
-    <li><strong>ALU Unit:</strong> Performs arithmetic operations (add/subtract) based on 2-bit action type with parallel cost selection and credit validation</li>
-    <li><strong>Display Driver:</strong> Converts 8-bit binary balance to BCD format for dual 7-segment displays showing tens and ones digits</li>
-    <li><strong>ROM:</strong> Stores predefined meal costs at fixed addresses (Mess: 0x49/73 credits, Canteen: 0x50/80 credits)</li>
+    <li><strong>FSM Core:</strong> Central controller managing state transitions (IDLE → AUTH → RECOMMEND → TRANSACTION → UPDATE) and generating control signals for coordinated operation</li>
+    <li><strong>Credit Register:</strong> 8-bit register storing student's current credit balance, initialized with prepaid semester mess fees, with synchronous load capability for secure updates</li>
+    <li><strong>ALU Unit:</strong> Performs three critical operations:
+      <ul>
+        <li>Deducts mess meal cost when student eats at mess</li>
+        <li><strong>Adds refund credit when student skips mess meal (solving the waste problem)</strong></li>
+        <li>Deducts canteen cost, allowing use of accumulated skip credits</li>
+      </ul>
+    </li>
+    <li><strong>Display Driver:</strong> Converts 8-bit binary balance to BCD format for dual 7-segment displays, showing students their available credits in real-time (tens and ones digits)</li>
+    <li><strong>ROM:</strong> Stores predefined costs: Mess meal = 0x49 (73 credits), Canteen item = 0x50 (80 credits), ensuring consistent pricing across all transactions</li>
   </ul>
   
 </details>
@@ -65,8 +78,13 @@
   
   <h2>How Does It Work?</h2>
   
+  <h3>Real-World Scenario</h3>
+  <p><strong>Problem:</strong> Rajesh is a 3rd-year CSE student who paid ₹5000 for mess at the semester start. Due to his 8 AM class followed by a 3-hour lab, he consistently misses lunch at the mess (12-2 PM). He has no choice but to eat at the canteen, spending ₹80 from his pocket each time, while his prepaid mess meal (₹73) goes to waste. Over a month, he loses ₹1,314 in wasted mess meals plus spends ₹1,440 at the canteen—effectively paying twice for food.</p>
+  
+  <p><strong>Solution:</strong> With our credit management system, when Rajesh skips lunch at the mess, he simply uses the system to register "Skipped Mess." The system automatically credits ₹73 back to his account. Later, when he goes to the canteen, he uses these accumulated credits to purchase his meal for ₹80, paying only ₹7 from pocket or using multiple skip credits. Zero waste, maximum savings!</p>
+  
   <h3>System Initialization</h3>
-  <p>The system begins in the IDLE state with a default balance loaded into the Credit Register (typically 255 credits). The 7-segment displays show the current balance in decimal format through the BCD Display Driver. All components are synchronized to a master clock signal ensuring race-free operation.</p>
+  <p>At the beginning of the semester, when a student pays their mess fees (e.g., ₹5000), this amount is converted to credits and loaded into the Credit Register. For example, ₹5000 ÷ ₹73 per meal ≈ 68 meals = 68 × 73 = 4964 credits (represented as initial balance). The 7-segment displays show this balance in decimal format through the BCD Display Driver. All components are synchronized to a master clock signal ensuring race-free operation.</p>
   
   <h3>Transaction Flow</h3>
   <ol>
@@ -74,41 +92,36 @@
     
     <li><strong>Authentication (AUTH → RECOMMEND):</strong> The system enforces a configurable timer-based delay (default: 10 clock cycles) using a counter-comparator unit. This delay prevents rapid unauthorized access attempts and allows time for external credential verification. When the counter reaches the threshold, the Timer Done signal (TD=1) is asserted, triggering transition to RECOMMEND (010) state.</li>
     
-    <li><strong>Meal Selection (RECOMMEND → TRANSACTION):</strong> The system presents available meal options with their respective costs:
-      <ul>
-        <li><strong>Mess Meal:</strong> 73 credits (0x49)</li>
-        <li><strong>Canteen Item:</strong> 80 credits (0x50)</li>
-      </ul>
-      Student selects meal type and action using a 2-bit control signal:
+    <li><strong>Meal Selection (RECOMMEND → TRANSACTION):</strong> The system presents three action options to the student:
       <table>
         <tr>
           <th>Action[1:0]</th>
           <th>Operation</th>
-          <th>Description</th>
-          <th>Cost</th>
+          <th>Use Case</th>
+          <th>Credits</th>
         </tr>
         <tr>
           <td>00</td>
           <td>Ate Mess</td>
-          <td>Deduct mess meal cost</td>
-          <td>73 credits</td>
+          <td>Student consumed their mess meal</td>
+          <td>-73 (deduct)</td>
         </tr>
         <tr>
           <td>01</td>
           <td>Skipped Mess</td>
-          <td>Add refund for skipped meal</td>
-          <td>+73 credits</td>
+          <td><strong>Student missed mess due to class/lab—recover prepaid value!</strong></td>
+          <td>+73 (refund)</td>
         </tr>
         <tr>
           <td>10</td>
           <td>Ate Canteen</td>
-          <td>Deduct canteen item cost</td>
-          <td>80 credits</td>
+          <td>Student purchases from canteen using accumulated credits</td>
+          <td>-80 (deduct)</td>
         </tr>
         <tr>
           <td>11</td>
           <td>Reserved</td>
-          <td>Future expansion</td>
+          <td>Future: partial payments, guest meals, etc.</td>
           <td>—</td>
         </tr>
       </table>
@@ -148,31 +161,182 @@
   
   <h2>Functional State Transition Table</h2>
   
-  | Current State | M | U | TD | Next State | Description |
-  |---------------|---|---|----|-----------|---------
-|
-  | IDLE (000) | 0 | X | X | IDLE (000) | Waiting for meal request |
-  | IDLE (000) | 1 | X | X | AUTH (001) | Start authentication |
-  | AUTH (001) | X | X | 0 | AUTH (001) | Authentication in progress |
-  | AUTH (001) | X | X | 1 | RECOMMEND (010) | Authentication complete |
-  | RECOMMEND (010) | X | 0 | X | RECOMMEND (010) | Waiting for user selection |
-  | RECOMMEND (010) | X | 1 | X | TRANSACTION (011) | Process selected action |
-  | TRANSACTION (011) | X | X | 0 | TRANSACTION (011) | Transaction processing |
-  | TRANSACTION (011) | X | X | 1 | UPDATE (100) | Approve and update balance |
-  | UPDATE (100) | X | X | X | IDLE (000) | Complete and return to idle |
+  <table>
+    <thead>
+      <tr>
+        <th>Current State</th>
+        <th>M</th>
+        <th>U</th>
+        <th>TD</th>
+        <th>Next State</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>IDLE (000)</td>
+        <td>0</td>
+        <td>X</td>
+        <td>X</td>
+        <td>IDLE (000)</td>
+        <td>Waiting for meal request</td>
+      </tr>
+      <tr>
+        <td>IDLE (000)</td>
+        <td>1</td>
+        <td>X</td>
+        <td>X</td>
+        <td>AUTH (001)</td>
+        <td>Start authentication</td>
+      </tr>
+      <tr>
+        <td>AUTH (001)</td>
+        <td>X</td>
+        <td>X</td>
+        <td>0</td>
+        <td>AUTH (001)</td>
+        <td>Authentication in progress</td>
+      </tr>
+      <tr>
+        <td>AUTH (001)</td>
+        <td>X</td>
+        <td>X</td>
+        <td>1</td>
+        <td>RECOMMEND (010)</td>
+        <td>Authentication complete</td>
+      </tr>
+      <tr>
+        <td>RECOMMEND (010)</td>
+        <td>X</td>
+        <td>0</td>
+        <td>X</td>
+        <td>RECOMMEND (010)</td>
+        <td>Waiting for user selection</td>
+      </tr>
+      <tr>
+        <td>RECOMMEND (010)</td>
+        <td>X</td>
+        <td>1</td>
+        <td>X</td>
+        <td>TRANSACTION (011)</td>
+        <td>Process selected action</td>
+      </tr>
+      <tr>
+        <td>TRANSACTION (011)</td>
+        <td>X</td>
+        <td>X</td>
+        <td>0</td>
+        <td>TRANSACTION (011)</td>
+        <td>Transaction processing</td>
+      </tr>
+      <tr>
+        <td>TRANSACTION (011)</td>
+        <td>X</td>
+        <td>X</td>
+        <td>1</td>
+        <td>UPDATE (100)</td>
+        <td>Approve and update balance</td>
+      </tr>
+      <tr>
+        <td>UPDATE (100)</td>
+        <td>X</td>
+        <td>X</td>
+        <td>X</td>
+        <td>IDLE (000)</td>
+        <td>Complete and return to idle</td>
+      </tr>
+    </tbody>
+  </table>
   
   <h2>Transaction Examples</h2>
   
-  | Initial Balance | Action Type | Operation | Cost | Credit OK | Final Balance | Result |
-  |----------------|-------------|-----------|------|-----------|---------------|--------|
-  | 255 | 00 (Ate Mess) | Subtract | 73 | ✓ | 182 | Success |
-  | 182 | 01 (Skipped Mess) | Add | 73 | ✓ | 255 | Success |
-  | 255 | 10 (Ate Canteen) | Subtract | 80 | ✓ | 175 | Success |
-  | 50 | 00 (Ate Mess) | Subtract | 73 | ✗ | 50 | Denied |
-  | 50 | 01 (Skipped Mess) | Add | 73 | ✓ | 123 | Success |
-  | 73 | 00 (Ate Mess) | Subtract | 73 | ✓ | 0 | Success |
-  | 79 | 10 (Ate Canteen) | Subtract | 80 | ✗ | 79 | Denied |
-  | 100 | 00 (Ate Mess) | Subtract | 73 | ✓ | 27 | Success |
+  <table>
+    <thead>
+      <tr>
+        <th>Initial Balance</th>
+        <th>Action Type</th>
+        <th>Operation</th>
+        <th>Cost</th>
+        <th>Credit OK</th>
+        <th>Final Balance</th>
+        <th>Result</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>255</td>
+        <td>00 (Ate Mess)</td>
+        <td>Subtract</td>
+        <td>73</td>
+        <td>✓</td>
+        <td>182</td>
+        <td>Success</td>
+      </tr>
+      <tr>
+        <td>182</td>
+        <td>01 (Skipped Mess)</td>
+        <td>Add</td>
+        <td>73</td>
+        <td>✓</td>
+        <td>255</td>
+        <td>Success</td>
+      </tr>
+      <tr>
+        <td>255</td>
+        <td>10 (Ate Canteen)</td>
+        <td>Subtract</td>
+        <td>80</td>
+        <td>✓</td>
+        <td>175</td>
+        <td>Success</td>
+      </tr>
+      <tr>
+        <td>50</td>
+        <td>00 (Ate Mess)</td>
+        <td>Subtract</td>
+        <td>73</td>
+        <td>✗</td>
+        <td>50</td>
+        <td>Denied</td>
+      </tr>
+      <tr>
+        <td>50</td>
+        <td>01 (Skipped Mess)</td>
+        <td>Add</td>
+        <td>73</td>
+        <td>✓</td>
+        <td>123</td>
+        <td>Success</td>
+      </tr>
+      <tr>
+        <td>73</td>
+        <td>00 (Ate Mess)</td>
+        <td>Subtract</td>
+        <td>73</td>
+        <td>✓</td>
+        <td>0</td>
+        <td>Success</td>
+      </tr>
+      <tr>
+        <td>79</td>
+        <td>10 (Ate Canteen)</td>
+        <td>Subtract</td>
+        <td>80</td>
+        <td>✗</td>
+        <td>79</td>
+        <td>Denied</td>
+      </tr>
+      <tr>
+        <td>100</td>
+        <td>00 (Ate Mess)</td>
+        <td>Subtract</td>
+        <td>73</td>
+        <td>✓</td>
+        <td>27</td>
+        <td>Success</td>
+      </tr>
+    </tbody>
+  </table>
   
 </details>
 
@@ -180,7 +344,7 @@
 ## Logisim Circuit Diagram
 <details>
   <summary>Detail</summary>
-  S2-18-MessCreditManagement/Snapshots/Diagrams
+
   <h3>Main Module</h3>
   <img src="S2-18-MessCreditManagement/Snapshots/Logisim/main_circuit.png" alt="Main Module Circuit">
   <p><strong>Description:</strong> Top-level integration showing FSM Core, ALU Unit, Credit Register (8-bit), ROM (meal costs), and Display Driver. Clock and reset signals are distributed to all synchronous components. Data buses (8-bit) connect the register output to ALU input and ALU output back to register input, forming the datapath.</p>
@@ -230,19 +394,6 @@
       or  u5 (cout, aandb, cin_and_axorb);
   endmodule
 
-  // D Flip-Flop with Asynchronous Reset
-  module d_flipflop_gate (
-      input  wire clk, rst_n, d,
-      output reg  q
-  );
-      always @(posedge clk or negedge rst_n) begin
-          if (!rst_n)
-              q <= 1'b0;
-          else
-              q <= d;
-      end
-  endmodule
-
   // 8-bit Ripple Carry Adder
   module adder_8bit_gate (
       input  wire [7:0] a, b,
@@ -276,43 +427,15 @@
       wire [7:0] selected_cost, cost_complement, adder_b_input;
       wire add_sub_ctrl, carry_in, balance_ge_cost, bypass_check;
       
-      // Action type decoding
       assign add_sub_ctrl = action_type[0];
-      
-      // Cost selection based on Action[1]
       assign selected_cost = action_type[1] ? 8'h50 : 8'h49;
-      
-      // Prepare inputs for add/subtract operation
       assign cost_complement = ~selected_cost;
       assign adder_b_input = add_sub_ctrl ? selected_cost : cost_complement;
       assign carry_in = add_sub_ctrl ? 1'b0 : 1'b1;
-      
-      // Compute new balance (handles both add and subtract)
       assign new_balance = balance + adder_b_input + carry_in;
-      
-      // Credit validation
       assign balance_ge_cost = (balance >= selected_cost);
-      assign bypass_check = add_sub_ctrl;  // Bypass for refunds
+      assign bypass_check = add_sub_ctrl;
       assign credit_ok = bypass_check | balance_ge_cost;
-  endmodule
-
-  // 8-bit Comparator
-  module comparator_8bit_dataflow (
-      input  wire [7:0] a, b,
-      output wire a_gt_b, a_eq_b, a_lt_b
-  );
-      assign a_gt_b = (a > b);
-      assign a_eq_b = (a == b);
-      assign a_lt_b = (a < b);
-  endmodule
-
-  // Binary to BCD Converter
-  module binary_to_bcd_dataflow (
-      input  wire [7:0] binary,
-      output wire [3:0] tens, ones
-  );
-      assign tens = binary / 10;
-      assign ones = binary % 10;
   endmodule
   ```
 
@@ -326,24 +449,19 @@
       output reg  timer_done,
       output reg  [7:0] state_outputs
   );
-      // State encoding
       localparam [2:0] IDLE = 3'b000, AUTH = 3'b001, 
-                       RECOMMEND = 3'b010, TRANSACTION = 3'b011, 
-                       UPDATE = 3'b100;
+                       RECOMMEND = 3'b010, TRANSACTION = 3'b011, UPDATE = 3'b100;
       
       reg [2:0] next_state;
       reg [3:0] auth_counter;
       localparam [3:0] AUTH_THRESHOLD = 4'd10;
       
-      // Sequential logic: State register and timer
       always @(posedge clk or negedge rst_n) begin
           if (!rst_n) begin
               current_state <= IDLE;
               auth_counter  <= 4'd0;
           end else begin
               current_state <= next_state;
-              
-              // Timer counter logic
               if (current_state == AUTH || current_state == TRANSACTION) begin
                   if (auth_counter < AUTH_THRESHOLD)
                       auth_counter <= auth_counter + 1'b1;
@@ -352,11 +470,9 @@
           end
       end
       
-      // Combinatorial logic: Next state determination
       always @(*) begin
           next_state = current_state;
           timer_done = (auth_counter >= AUTH_THRESHOLD);
-          
           case (current_state)
               IDLE:        next_state = meal_request ? AUTH : IDLE;
               AUTH:        next_state = timer_done ? RECOMMEND : AUTH;
@@ -367,7 +483,6 @@
           endcase
       end
       
-      // Output generation
       always @(*) begin
           state_outputs = 8'b00000000;
           case (current_state)
@@ -379,161 +494,10 @@
           endcase
       end
   endmodule
-
-  // Credit Register
-  module credit_register_behavioral (
-      input  wire clk, rst_n, load_enable,
-      input  wire [7:0] data_in,
-      output reg  [7:0] data_out
-  );
-      always @(posedge clk or negedge rst_n) begin
-          if (!rst_n)
-              data_out <= 8'hFF;  // Default balance: 255
-          else if (load_enable)
-              data_out <= data_in;
-      end
-  endmodule
-
-  // Main System Integration
-  module main_system_behavioral (
-      input  wire clk, rst_n, meal_request, user_select,
-      input  wire [1:0] action_type,
-      output wire [2:0] current_state,
-      output wire [7:0] current_balance,
-      output wire [6:0] tens_display, ones_display,
-      output wire credit_ok
-  );
-      wire timer_done;
-      wire [7:0] state_outputs, new_balance;
-      wire load_enable;
-      
-      assign load_enable = state_outputs[4] & credit_ok;
-      
-      fsm_core_behavioral fsm (
-          .clk(clk), .rst_n(rst_n),
-          .meal_request(meal_request), .user_select(user_select),
-          .current_state(current_state), .timer_done(timer_done),
-          .state_outputs(state_outputs)
-      );
-      
-      alu_unit_dataflow alu (
-          .balance(current_balance), .action_type(action_type),
-          .new_balance(new_balance), .credit_ok(credit_ok)
-      );
-      
-      credit_register_behavioral register (
-          .clk(clk), .rst_n(rst_n), .load_enable(load_enable),
-          .data_in(new_balance), .data_out(current_balance)
-      );
-      
-      display_driver_behavioral display (
-          .balance(current_balance),
-          .tens_display(tens_display), .ones_display(ones_display)
-      );
-  endmodule
   ```
 
-  ### Test Bench
-
-  ```verilog
-  `timescale 1ns/1ps
-
-  module main_system_tb;
-      reg clk, rst_n, meal_request, user_select;
-      reg [1:0] action_type;
-      wire [2:0] current_state;
-      wire [7:0] current_balance;
-      wire [6:0] tens_display, ones_display;
-      wire credit_ok;
-      
-      main_system_behavioral uut (
-          .clk(clk), .rst_n(rst_n),
-          .meal_request(meal_request), .user_select(user_select),
-          .action_type(action_type), .current_state(current_state),
-          .current_balance(current_balance),
-          .tens_display(tens_display), .ones_display(ones_display),
-          .credit_ok(credit_ok)
-      );
-      
-      // Clock generation: 100MHz (10ns period)
-      initial begin
-          clk = 0;
-          forever #5 clk = ~clk;
-      end
-      
-      // Test stimulus
-      initial begin
-          $display("\n========================================");
-          $display("Credit Management System Test");
-          $display("========================================\n");
-          
-          // Initialize
-          rst_n = 0; meal_request = 0; user_select = 0; action_type = 2'b00;
-          #15 rst_n = 1;
-          $display("Initial Balance: %d credits\n", current_balance);
-          
-          // Test 1: Ate Mess (subtract 73)
-          $display("Test 1: Ate Mess Transaction");
-          #20 meal_request = 1; action_type = 2'b00;
-          #10 meal_request = 0;
-          #120 user_select = 1;
-          #10 user_select = 0;
-          #150 $display("  Balance: %d (Expected: 182)\n", current_balance);
-          
-          // Test 2: Skipped Mess (add 73)
-          $display("Test 2: Skipped Mess Refund");
-          #20 meal_request = 1; action_type = 2'b01;
-          #10 meal_request = 0;
-          #120 user_select = 1;
-          #10 user_select = 0;
-          #150 $display("  Balance: %d (Expected: 255)\n", current_balance);
-          
-          // Test 3: Ate Canteen (subtract 80)
-          $display("Test 3: Ate Canteen Transaction");
-          #20 meal_request = 1; action_type = 2'b10;
-          #10 meal_request = 0;
-          #120 user_select = 1;
-          #10 user_select = 0;
-          #150 $display("  Balance: %d (Expected: 175)\n", current_balance);
-          
-          // Test 4: Insufficient balance
-          action_type = 2'b10;
-          repeat(3) begin
-              #20 meal_request = 1;
-              #10 meal_request = 0;
-              #120 user_select = 1;
-              #10 user_select = 0;
-              #150 $display("  Balance: %d", current_balance);
-          end
-          
-          $display("\n========================================");
-          $display("All Tests Completed");
-          $display("========================================\n");
-          
-          #100 $finish;
-      end
-      
-      // Monitor state changes
-      always @(current_state) begin
-          case (current_state)
-              3'b000: $display("  [State: IDLE]");
-              3'b001: $display("  [State: AUTH]");
-              3'b010: $display("  [State: RECOMMEND]");
-              3'b011: $display("  [State: TRANSACTION]");
-              3'b100: $display("  [State: UPDATE]");
-          endcase
-      end
-      
-      // Generate waveform file
-      initial begin
-          $dumpfile("main_system_tb.vcd");
-          $dumpvars(0, main_system_tb);
-      end
-  endmodule
-  ```
-
-  <h3>Simulation Results</h3>
-  <p>All Verilog testbenches generate VCD waveform files for analysis. Complete source code is available in the <code>/Verilog</code> directory organized by modeling style (gate-level, dataflow, behavioral).</p>
+  <h3>Complete Code</h3>
+  <p>All Verilog implementations (gate-level, dataflow, behavioral) and testbenches are available in the <code>/Verilog</code> directory organized by modeling style.</p>
   
 </details>
 
