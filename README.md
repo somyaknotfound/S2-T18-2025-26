@@ -512,11 +512,11 @@
   <h3>Truth Tables Output</h3>
   
   <h4>1. Full Adder Truth Table</h4>
-  <img src="S2-18-MessCreditManagement/Snapshots/Verilog/full_adder_truth_table.png" alt="Full Adder Truth Table">
+  <img src="S2-18-MessCreditManagement/Snapshots/Verilog/full_adder_truth_table.jpg" alt="Full Adder Truth Table">
   <p><strong>Verification:</strong> The 1-bit full adder shows all 8 input combinations (A, B, Cin) and correctly generates Sum and Cout outputs. The XOR-based sum generation and carry propagation logic are verified through exhaustive testing.</p>
 
   <h4>2. ALU Operation Truth Table</h4>
-  <img src="S2-18-MessCreditManagement/Snapshots/Verilog/alu_truth_table.png" alt="ALU Truth Table">
+  <img src="S2-18-MessCreditManagement/Snapshots/Verilog/alu_truth_table.jpg" alt="ALU Truth Table">
   <p><strong>Verification:</strong> The ALU demonstrates all four action types with two test scenarios:</p>
   <ul>
     <li><strong>Balance = 100:</strong> All operations (Ate Mess, Skip Mess, Ate Canteen, Skip Canteen) execute successfully with sufficient credits</li>
@@ -524,40 +524,40 @@
   </ul>
 
   <h4>3. BCD to 7-Segment Decoder Truth Table</h4>
-  <img src="S2-18-MessCreditManagement/Snapshots/Verilog/bcd_7seg_truth_table.png" alt="BCD to 7-Segment Truth Table">
+  <img src="S2-18-MessCreditManagement/Snapshots/Verilog/bcd_7seg_truth_table.jpg" alt="BCD to 7-Segment Truth Table">
   <p><strong>Verification:</strong> The decoder correctly maps all 10 BCD digits (0-9) to their corresponding 7-segment display patterns using standard segment encoding (segments a-g).</p>
 
   <h4>4. FSM State Transition Table</h4>
-  <img src="S2-18-MessCreditManagement/Snapshots/Verilog/fsm_state_table.png" alt="FSM State Transition Table">
+  <img src="S2-18-MessCreditManagement/Snapshots/Verilog/fsm_state_table.jpg" alt="FSM State Transition Table">
   <p><strong>Verification:</strong> The 5-state FSM shows all possible transitions with input conditions (Meal_Req, User_Sel, Timer_Done). The state machine follows the expected flow: IDLE → AUTH → RECOMMEND → TRANSACTION → UPDATE → IDLE.</p>
 
   <h3>Functional Test Results</h3>
   
   <h4>System Initialization</h4>
-  <img src="S2-18-MessCreditManagement/Snapshots/Verilog/system_reset.png" alt="System Initialization">
+  <img src="S2-18-MessCreditManagement/Snapshots/Verilog/system_reset.jpg" alt="System Initialization">
   <p><strong>Result:</strong> System successfully resets with initial balance of 255 credits (0xFF), representing prepaid semester mess fees.</p>
 
   <h4>Test 1: Ate Mess Transaction</h4>
-  <img src="S2-18-MessCreditManagement/Snapshots/Verilog/test1_ate_mess.png" alt="Test 1 - Ate Mess">
+  <img src="S2-18-MessCreditManagement/Snapshots/Verilog/test1_ate_mess.jpg" alt="Test 1 - Ate Mess">
   <p><strong>Operation:</strong> Action Type = 00 (Ate Mess), Cost = 73 credits</p>
   <p><strong>FSM Flow:</strong> IDLE → AUTH → RECOMMEND → TRANSACTION → UPDATE → IDLE</p>
   <p><strong>Result:</strong> Balance: 255 - 73 = 182 credits | Credit OK: 1 (Approved)</p>
 
   <h4>Test 2: Skipped Mess Refund</h4>
-  <img src="S2-18-MessCreditManagement/Snapshots/Verilog/test2_skip_mess.png" alt="Test 2 - Skip Mess">
+  <img src="S2-18-MessCreditManagement/Snapshots/Verilog/test2_skip_mess.jpg" alt="Test 2 - Skip Mess">
   <p><strong>Operation:</strong> Action Type = 01 (Skipped Mess), Refund = +73 credits</p>
   <p><strong>Key Feature:</strong> This demonstrates the core innovation—recovering wasted prepaid meal value!</p>
   <p><strong>FSM Flow:</strong> IDLE → AUTH → RECOMMEND → TRANSACTION → UPDATE → IDLE</p>
   <p><strong>Result:</strong> Balance: 182 + 73 = 255 credits | Credit OK: 1 (Always approved for refunds)</p>
 
   <h4>Test 3: Ate Canteen Transaction</h4>
-  <img src="S2-18-MessCreditManagement/Snapshots/Verilog/test3_ate_canteen.png" alt="Test 3 - Ate Canteen">
+  <img src="S2-18-MessCreditManagement/Snapshots/Verilog/test3_ate_canteen.jpg" alt="Test 3 - Ate Canteen">
   <p><strong>Operation:</strong> Action Type = 10 (Ate Canteen), Cost = 80 credits</p>
   <p><strong>FSM Flow:</strong> IDLE → AUTH → RECOMMEND → TRANSACTION → UPDATE → IDLE</p>
   <p><strong>Result:</strong> Balance: 255 - 80 = 175 credits | Credit OK: 1 (Approved)</p>
 
   <h4>Test 4: Insufficient Balance Scenarios</h4>
-  <img src="S2-18-MessCreditManagement/Snapshots/Verilog/test4_insufficient.png" alt="Test 4 - Insufficient Balance">
+  <img src="S2-18-MessCreditManagement/Snapshots/Verilog/test4_insufficient.jpg" alt="Test 4 - Insufficient Balance">
   <p><strong>Operation:</strong> Multiple canteen transactions with depleting balance</p>
   <p><strong>Test Sequence:</strong></p>
   <ul>
@@ -567,9 +567,7 @@
   </ul>
   <p><strong>Verification:</strong> The comparator correctly validates insufficient balance and prevents overdraft, maintaining balance at 15 credits.</p>
 
-  <h3>Complete Test Summary</h3>
-  <img src="S2-18-MessCreditManagement/Snapshots/Verilog/test_summary.png" alt="Complete Test Summary">
-  <p><strong>All Tests Passed:</strong></p>
+  
   <ul>
     <li>✓ System initialization and reset functionality</li>
     <li>✓ FSM state transitions (AUTH timer-based delays verified)</li>
@@ -580,10 +578,7 @@
     <li>✓ Edge cases: insufficient balance, boundary values, refund operations</li>
   </ul>
 
-  <h3>Waveform Analysis</h3>
-  <img src="S2-18-MessCreditManagement/Snapshots/Verilog/gtkwave_waveform.png" alt="GTKWave Waveform">
-  <p><strong>Signal Analysis:</strong></p>
-  <ul>
+  
     <li><strong>CLK:</strong> System clock at 100MHz (10ns period)</li>
     <li><strong>current_state[2:0]:</strong> FSM state progression visible across all transactions</li>
     <li><strong>current_balance[7:0]:</strong> Balance updates synchronized to UPDATE state</li>
