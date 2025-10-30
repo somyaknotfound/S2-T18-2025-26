@@ -501,6 +501,165 @@
   
 </details>
 
+<!-- Seventh Section - Add this after the Verilog Code section -->
+## Verilog Simulation Results
+<details>
+  <summary>Detail</summary>
+
+  <h3>Compilation and Simulation</h3>
+  <p>The design was successfully compiled and simulated using Icarus Verilog (iverilog) and GTKWave for waveform analysis. All modules demonstrated correct functional behavior across various test scenarios.</p>
+
+  <h3>Truth Tables Output</h3>
+  
+  <h4>1. Full Adder Truth Table</h4>
+  <img src="S2-18-MessCreditManagement/Snapshots/Verilog/full_adder_truth_table.png" alt="Full Adder Truth Table">
+  <p><strong>Verification:</strong> The 1-bit full adder shows all 8 input combinations (A, B, Cin) and correctly generates Sum and Cout outputs. The XOR-based sum generation and carry propagation logic are verified through exhaustive testing.</p>
+
+  <h4>2. ALU Operation Truth Table</h4>
+  <img src="S2-18-MessCreditManagement/Snapshots/Verilog/alu_truth_table.png" alt="ALU Truth Table">
+  <p><strong>Verification:</strong> The ALU demonstrates all four action types with two test scenarios:</p>
+  <ul>
+    <li><strong>Balance = 100:</strong> All operations (Ate Mess, Skip Mess, Ate Canteen, Skip Canteen) execute successfully with sufficient credits</li>
+    <li><strong>Balance = 50:</strong> Insufficient balance cases correctly deny transactions (Ate Mess: 50 < 73, Ate Canteen: 50 < 80) while refund operations always succeed</li>
+  </ul>
+
+  <h4>3. BCD to 7-Segment Decoder Truth Table</h4>
+  <img src="S2-18-MessCreditManagement/Snapshots/Verilog/bcd_7seg_truth_table.png" alt="BCD to 7-Segment Truth Table">
+  <p><strong>Verification:</strong> The decoder correctly maps all 10 BCD digits (0-9) to their corresponding 7-segment display patterns using standard segment encoding (segments a-g).</p>
+
+  <h4>4. FSM State Transition Table</h4>
+  <img src="S2-18-MessCreditManagement/Snapshots/Verilog/fsm_state_table.png" alt="FSM State Transition Table">
+  <p><strong>Verification:</strong> The 5-state FSM shows all possible transitions with input conditions (Meal_Req, User_Sel, Timer_Done). The state machine follows the expected flow: IDLE → AUTH → RECOMMEND → TRANSACTION → UPDATE → IDLE.</p>
+
+  <h3>Functional Test Results</h3>
+  
+  <h4>System Initialization</h4>
+  <img src="S2-18-MessCreditManagement/Snapshots/Verilog/system_reset.png" alt="System Initialization">
+  <p><strong>Result:</strong> System successfully resets with initial balance of 255 credits (0xFF), representing prepaid semester mess fees.</p>
+
+  <h4>Test 1: Ate Mess Transaction</h4>
+  <img src="S2-18-MessCreditManagement/Snapshots/Verilog/test1_ate_mess.png" alt="Test 1 - Ate Mess">
+  <p><strong>Operation:</strong> Action Type = 00 (Ate Mess), Cost = 73 credits</p>
+  <p><strong>FSM Flow:</strong> IDLE → AUTH → RECOMMEND → TRANSACTION → UPDATE → IDLE</p>
+  <p><strong>Result:</strong> Balance: 255 - 73 = 182 credits | Credit OK: 1 (Approved)</p>
+
+  <h4>Test 2: Skipped Mess Refund</h4>
+  <img src="S2-18-MessCreditManagement/Snapshots/Verilog/test2_skip_mess.png" alt="Test 2 - Skip Mess">
+  <p><strong>Operation:</strong> Action Type = 01 (Skipped Mess), Refund = +73 credits</p>
+  <p><strong>Key Feature:</strong> This demonstrates the core innovation—recovering wasted prepaid meal value!</p>
+  <p><strong>FSM Flow:</strong> IDLE → AUTH → RECOMMEND → TRANSACTION → UPDATE → IDLE</p>
+  <p><strong>Result:</strong> Balance: 182 + 73 = 255 credits | Credit OK: 1 (Always approved for refunds)</p>
+
+  <h4>Test 3: Ate Canteen Transaction</h4>
+  <img src="S2-18-MessCreditManagement/Snapshots/Verilog/test3_ate_canteen.png" alt="Test 3 - Ate Canteen">
+  <p><strong>Operation:</strong> Action Type = 10 (Ate Canteen), Cost = 80 credits</p>
+  <p><strong>FSM Flow:</strong> IDLE → AUTH → RECOMMEND → TRANSACTION → UPDATE → IDLE</p>
+  <p><strong>Result:</strong> Balance: 255 - 80 = 175 credits | Credit OK: 1 (Approved)</p>
+
+  <h4>Test 4: Insufficient Balance Scenarios</h4>
+  <img src="S2-18-MessCreditManagement/Snapshots/Verilog/test4_insufficient.png" alt="Test 4 - Insufficient Balance">
+  <p><strong>Operation:</strong> Multiple canteen transactions with depleting balance</p>
+  <p><strong>Test Sequence:</strong></p>
+  <ul>
+    <li>Transaction 1: 175 - 80 = 95 credits (Approved)</li>
+    <li>Transaction 2: 95 - 80 = 15 credits (Approved)</li>
+    <li>Transaction 3: 15 - 80 = DENIED (15 < 80) | Credit OK: 0</li>
+  </ul>
+  <p><strong>Verification:</strong> The comparator correctly validates insufficient balance and prevents overdraft, maintaining balance at 15 credits.</p>
+
+  <h3>Complete Test Summary</h3>
+  <img src="S2-18-MessCreditManagement/Snapshots/Verilog/test_summary.png" alt="Complete Test Summary">
+  <p><strong>All Tests Passed:</strong></p>
+  <ul>
+    <li>✓ System initialization and reset functionality</li>
+    <li>✓ FSM state transitions (AUTH timer-based delays verified)</li>
+    <li>✓ ALU arithmetic operations (add/subtract with 2's complement)</li>
+    <li>✓ Credit validation logic (balance comparison)</li>
+    <li>✓ Register update atomicity (synchronous load)</li>
+    <li>✓ Display driver BCD conversion (verified through waveforms)</li>
+    <li>✓ Edge cases: insufficient balance, boundary values, refund operations</li>
+  </ul>
+
+  <h3>Waveform Analysis</h3>
+  <img src="S2-18-MessCreditManagement/Snapshots/Verilog/gtkwave_waveform.png" alt="GTKWave Waveform">
+  <p><strong>Signal Analysis:</strong></p>
+  <ul>
+    <li><strong>CLK:</strong> System clock at 100MHz (10ns period)</li>
+    <li><strong>current_state[2:0]:</strong> FSM state progression visible across all transactions</li>
+    <li><strong>current_balance[7:0]:</strong> Balance updates synchronized to UPDATE state</li>
+    <li><strong>action_type[1:0]:</strong> Transaction type encoding (00, 01, 10)</li>
+    <li><strong>credit_ok:</strong> High for approved transactions, low for insufficient balance</li>
+    <li><strong>tens_display[6:0] / ones_display[6:0]:</strong> 7-segment patterns for real-time display</li>
+  </ul>
+
+  <h3>Timing Analysis</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>State</th>
+        <th>Duration (Clock Cycles)</th>
+        <th>Real Time (10ns clock)</th>
+        <th>Purpose</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>IDLE</td>
+        <td>Variable</td>
+        <td>—</td>
+        <td>Waiting for user input</td>
+      </tr>
+      <tr>
+        <td>AUTH</td>
+        <td>10</td>
+        <td>100ns</td>
+        <td>Authentication delay (configurable)</td>
+      </tr>
+      <tr>
+        <td>RECOMMEND</td>
+        <td>Variable</td>
+        <td>—</td>
+        <td>Action type selection</td>
+      </tr>
+      <tr>
+        <td>TRANSACTION</td>
+        <td>10</td>
+        <td>100ns</td>
+        <td>ALU computation and validation</td>
+      </tr>
+      <tr>
+        <td>UPDATE</td>
+        <td>1</td>
+        <td>10ns</td>
+        <td>Register write (atomic)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Simulation Commands</h3>
+  <pre>
+  # Compile all Verilog modules
+  iverilog -o simulation gate_level.v dataflow.v behavioral.v main_system.v testbench.v
+
+  # Run simulation (generates waveform.vcd)
+  vvp simulation
+
+  # View waveforms in GTKWave
+  gtkwave waveform.vcd
+  </pre>
+
+  <h3>Console Output</h3>
+  <p>The testbench generates comprehensive console output including:</p>
+  <ul>
+    <li>Truth tables for all combinational modules</li>
+    <li>FSM state transition verification</li>
+    <li>Transaction-by-transaction results with expected vs. actual values</li>
+    <li>Real-time state change notifications</li>
+    <li>Final test summary with pass/fail status</li>
+  </ul>
+
+</details>
+
 ## References
 <details>
   <summary>Detail</summary>
